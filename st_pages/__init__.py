@@ -92,6 +92,27 @@ def count_position_sales_food(data, position, category='Food'):
     st.write("Store Sales of Seasonal Food Items:   sales volume:", seasonal_yes_count, ",  ", percentage_yes, " %")
     st.write("Store Sales of Non-seasonal Food Items:   sales volume:", seasonal_no_count, ",  ", percentage_no, " %")
 
+
+
+def count_position_sales(data, category, position):
+    # Filter data based on position and category
+    filtered_data = data[(data['Product Category'] == category) & (data['Product Position'] == position)]
+        
+    # Calculate seasonal sales counts
+    seasonal_yes_count = filtered_data[filtered_data['Seasonal'] == 'Yes']['Sales Volume'].sum()
+    seasonal_no_count = filtered_data[filtered_data['Seasonal'] == 'No']['Sales Volume'].sum()
+        
+    # Calculate percentages
+    total_sales = seasonal_yes_count + seasonal_no_count
+    percentage_yes = round((seasonal_yes_count / total_sales) * 100, 2)
+    percentage_no = round((seasonal_no_count / total_sales) * 100, 2)
+        
+    # Output results
+    st.write("Store Sales of Seasonal Clothing Items:   sales volume:", seasonal_yes_count, ",  ", percentage_yes, " %")
+    st.write("Store Sales of Non-seasonal Clothing Items:   sales volume:", seasonal_no_count, ",  ", percentage_no, " %")
+
+
+
 def count_promotion_sales(data, position):
     # Filter data based on position and category
     filtered_data_seasonal = data[(data['Product Category'] == 'Clothing')&(data['Product Position'] == position)]

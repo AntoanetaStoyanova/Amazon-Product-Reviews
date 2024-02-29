@@ -5,7 +5,7 @@ import plotly.express as px
 from streamlit import altair_chart
 
 
-from st_pages import visualize_data, dataset, count_promotion_sales, count_position_sales_clothing, count_position_sales_electronics, count_position_sales_food 
+from st_pages import visualize_data, dataset, count_promotion_sales, count_position_sales, count_position_sales_clothing, count_position_sales_electronics, count_position_sales_food 
 
 
 
@@ -41,42 +41,31 @@ with col1:
     st.altair_chart(chart, use_container_width=True, theme=None)
     # --------------------------------------------------------------------
 with col2:
-#-----------------
-    tab1, tab2, tab3 = st.tabs(['Clothing', 'Electronics', 'Food'])
-    # Processing each tab
-    with tab1:
-        dataset(data, 'Clothing')
-         # Creating tabs
-        tab6, tab7, tab8 = st.tabs(['Aisle', 'End-cap', 'Front of Store'])
-        # Processing each tab
-        with tab6:
-            count_position_sales_clothing(data, 'Aisle')
-        with tab7:
-            count_position_sales_clothing(data, 'End-cap')
-        with tab8:
-            count_position_sales_clothing(data, 'Front of Store')
-    with tab2:
-        dataset(data, 'Electronics')
-         # Creating tabs
-        tab6, tab7, tab8 = st.tabs(['Aisle', 'End-cap', 'Front of Store'])
-        # Processing each tab
-        with tab6:
-            count_position_sales_electronics(data, 'Aisle')
-        with tab7:
-            count_position_sales_electronics(data, 'End-cap')
-        with tab8:
-            count_position_sales_electronics(data, 'Front of Store')
-    with tab3:
-        dataset(data, 'Food')
-         # Creating tabs
-        tab9, tab10, tab11 = st.tabs(['Aisle', 'End-cap', 'Front of Store'])
-        # Processing each tab
-        with tab9:
-            count_position_sales_food(data, 'Aisle')
-        with tab10:
-            count_position_sales_food(data, 'End-cap')
-        with tab11:
-            count_position_sales_food(data, 'Front of Store')
+    #------------------------
+    option = st.selectbox(
+        'Choose a Product Category:',
+        ('Clothing', 'Electronics', 'Food'))
+    # define a dictionnart ( map eaxh product category to a list of tab labels associated with that category). allows to retrieve the tab labels based on the selection option later
+    tab_labels = {'Clothing': ['Aisle', 'End-cap', 'Front of Store'],
+                'Electronics': ['Aisle', 'End-cap', 'Front of Store'],
+                'Food': ['Aisle', 'End-cap', 'Front of Store']}
+
+    if option:
+        selected_data = dataset(data, option)
+        # create tabs and pass the list of tab labels corresponding to the selected option
+        tabs = st.tabs(tab_labels[option])
+        # loop that iterates over each tab label in the list of tab labels associated with the selected option.
+        # enumerate() to get both the index (i) and the tab label in each iteration
+        for i, tab_label in enumerate(tab_labels[option]):
+            # set current tab to the tab at index i 
+            with tabs[i]:
+                count_position_sales(data, option, tab_label)
+    #------------------------
+
+
+
+
+
 
 
 
