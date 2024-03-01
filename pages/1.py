@@ -5,7 +5,7 @@ import plotly.express as px
 from streamlit import altair_chart
 
 
-from st_pages import visualize_data, dataset, dataset_seasonable, count_position_sales, count_position_sales_clothing, count_position_sales_electronics, count_position_sales_food 
+from st_pages import visualize_data, dataset, dataset_seasonable, count_position_sales
 
 
 
