@@ -180,8 +180,8 @@ def count_position_sales(data, category, position):
     percentage_no = round((seasonal_no_count / total_sales) * 100, 2)
         
     # Output results
-    st.write("Store Sales of Seasonal Clothing Items:   sales volume:", seasonal_yes_count, ",  ", percentage_yes, " %")
-    st.write("Store Sales of Non-seasonal Clothing Items:   sales volume:", seasonal_no_count, ",  ", percentage_no, " %")
+    st.write(f"Store Sales of Seasonal {category} Items:   sales volume:", seasonal_yes_count, ",  ", percentage_yes, " %")
+    st.write(f"Store Sales of Non-seasonal {category} Items:   sales volume:", seasonal_no_count, ",  ", percentage_no, " %")
 
 
 
