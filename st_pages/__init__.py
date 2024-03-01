@@ -41,6 +41,72 @@ def dataset(data, category):
         # Affichage de la DataFrame
     st.write(df)
 
+
+
+#----------
+def calculate_sales(data):
+    promo_sales = data[data['Promotion'] == 'Yes']['Sales Volume'].sum()
+    non_promo_sales = data[data['Promotion'] == 'No']['Sales Volume'].sum()
+    return promo_sales, non_promo_sales
+
+def display_sales_data(data, category, seasonal, selected_option):
+        if data is not None:
+        
+            st.write(f'{seasonal} Product Category: {category}')
+            df = pd.DataFrame({
+                'Product Category': [category],
+                'Sales Values': [data if data else 0],
+                'Seasonal': [seasonal]
+            })
+            st.write(df)
+        
+
+
+def process_seasonal_data(data, category, selected_option):
+    seasonal_sales = data.groupby('Seasonal')['Sales Volume'].sum()
+    display_sales_data(seasonal_sales.get('Yes'), category, 'seasonal', selected_option)
+    display_sales_data(seasonal_sales.get('No'), category, 'unseasonal', selected_option)
+
+    unique_positions = data['Product Position'].unique()
+    position_strings = [str(position) for position in unique_positions]
+    tabs = st.tabs(position_strings)
+    
+    for i, position in enumerate(unique_positions):
+        position_data = data[data['Product Position'] == position]
+        promo_sales, non_promo_sales = calculate_sales(position_data)
+        with tabs[i]:
+            st.write(f"Sales Volume for Promo items in {position}: ", promo_sales)
+            st.write(f"Sales Volume for Non-Promo items in {position}: ", non_promo_sales)
+
+def dataset_seasonable(data, category, option, selected_option):
+    filtered_data = data[data['Product Category'] == category]
+    
+    if option == 'Seasonal':
+        seasonal_data = filtered_data[filtered_data['Seasonal'] == 'Yes']
+        process_seasonal_data(seasonal_data, category, selected_option)
+    else:
+        unseasonal_data = filtered_data[filtered_data['Seasonal'] == 'No']
+        process_seasonal_data(unseasonal_data, category, selected_option) 
+#-------------
+
+
+
+
+def count_promotion_salese(data, category, position):
+    # Filter data based on position and category
+    filtered_data_seasonal = data[(data['Product Category'] == category) & (data['Product Position'] == position)]
+    
+    promotion_yes = filtered_data_seasonal[(filtered_data_seasonal['Seasonal'] == 'Yes') & (filtered_data_seasonal['Promotion'] == 'Yes')]['Sales Volume'].sum()
+    promotion_non = filtered_data_seasonal[(filtered_data_seasonal['Seasonal'] == 'No') & (filtered_data_seasonal['Promotion'] == 'Yes')]['Sales Volume'].sum()
+    
+    # Calculate percentages
+    total_promotion = promotion_yes + promotion_non
+    percentage_yes_promo = round((promotion_yes / total_promotion) * 100, 2)
+    percentage_no_promo = round((promotion_non / total_promotion) * 100, 2)
+    
+    st.write(f"Total Sales Volume for {category} Items on Promotion:  sales values:", promotion_yes, '  ,', percentage_yes_promo, ' %')
+    st.write(f"Total Sales Volume for {category} Items not on Promotion:  sales values:", promotion_non, '  ,', percentage_no_promo, ' %')        
+
 def count_position_sales_clothing(data, position, category='Clothing'):
     # Filter data based on position and category
     filtered_data = data[(data['Product Category'] == category) & (data['Product Position'] == position)]
@@ -113,15 +179,3 @@ def count_position_sales(data, category, position):
 
 
 
-def count_promotion_sales(data, position):
-    # Filter data based on position and category
-    filtered_data_seasonal = data[(data['Product Category'] == 'Clothing')&(data['Product Position'] == position)]
-    
-    promotion_yes = filtered_data_seasonal[(filtered_data_seasonal['Seasonal'] == 'Yes')&(filtered_data_seasonal['Promotion']=='Yes')]['Sales Volume'].sum()
-    promotion_non = filtered_data_seasonal[(filtered_data_seasonal['Seasonal'] == 'No')&(filtered_data_seasonal['Promotion']=='Yes')]['Sales Volume'].sum()
-    # Calculate percentages
-    total_promotion = promotion_yes + promotion_non
-    percentage_yes_promo = round((promotion_yes / total_promotion) * 100, 2)
-    percentage_no_promo = round((promotion_non / total_promotion) * 100, 2)
-    st.write("Total Sales Volume for Seasonal Clothing Items on Promotion:  sales values:", promotion_yes, '  ,', percentage_yes_promo, ' %')
-    st.write("Total Sales Volume for Non-seasonal Clothing Items on Promotion:  sales values:", promotion_non, '  ,', percentage_no_promo, ' %')

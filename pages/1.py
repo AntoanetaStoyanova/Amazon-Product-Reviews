@@ -5,7 +5,7 @@ import plotly.express as px
 from streamlit import altair_chart
 
 
-from st_pages import visualize_data, dataset, count_promotion_sales, count_position_sales, count_position_sales_clothing, count_position_sales_electronics, count_position_sales_food 
+from st_pages import visualize_data, dataset, dataset_seasonable, count_position_sales, count_position_sales_clothing, count_position_sales_electronics, count_position_sales_food 
 
 
 
@@ -61,24 +61,36 @@ with col2:
             with tabs[i]:
                 count_position_sales(data, option, tab_label)
     #------------------------
+    # ----------------------
+    # Add blank space 
+    st.markdown("<br>", unsafe_allow_html=True)
+    # ----------------------
+  
 
-
-
-
-
-
-
-
+    option_seasonal_promo = st.selectbox('Choose a Product Category:', ('Clothing', 'Electronics', 'Food'), key="seasonal_promo_option")
+    option_s = st.radio (f'Sales Volume of {option_seasonal_promo}:', ['Seasonal', 'Unseasonal'], horizontal=True)
+    
+    selected_option = None  # You need to define selected_option here
+    # PROBLEM
+    if option_seasonal_promo:
+        dataset_seasonable(data, option_seasonal_promo, option_s, selected_option)
+        
+        
+    
+    # ----------------------
+    # Add blank space 
+    st.markdown("<br>", unsafe_allow_html=True)
+    # ----------------------
 
     # Creating tabs
-    tab7, tab8, tab9 = st.tabs(['Aisle', 'End-cap', 'Front of Store'])
+    #tab7, tab8, tab9 = st.tabs(['Aisle', 'End-cap', 'Front of Store'])
     # Processing each tab
-    with tab7:
-        count_promotion_sales(data, 'Aisle')
-    with tab8:
-        count_promotion_sales(data, 'End-cap')
-    with tab9:
-        count_promotion_sales(data, 'Front of Store')
+    #with tab7:
+    #    count_promotion_sales(data, 'Aisle')
+    #with tab8:
+    #    count_promotion_sales(data, 'End-cap')
+    #with tab9:
+    #    count_promotion_sales(data, 'Front of Store')
 
     #-----------------
     filtered_data_clothing = data[data['Product Category'] == 'Clothing']
