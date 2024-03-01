@@ -42,6 +42,8 @@ with col1:
     # --------------------------------------------------------------------
 with col2:
     #------------------------
+    st.markdown('##### Product Category Selector: Analyzing the % of Sales Volume of Product Category by Product Position and is it Seasonal or not')
+
     option = st.selectbox(
         'Choose a Product Category:',
         ('Clothing', 'Electronics', 'Food'))
@@ -65,8 +67,8 @@ with col2:
     # Add blank space 
     st.markdown("<br>", unsafe_allow_html=True)
     # ----------------------
-  
-
+    st.divider()
+    st.markdown('##### Product Category Selector with Seasonal Flag: Analyzing Promo vs Non-Promo Sales Volume by Product Position')
     option_seasonal_promo = st.selectbox('Choose a Product Category:', ('Clothing', 'Electronics', 'Food'), key="seasonal_promo_option")
     option_s = st.radio (f'Sales Volume of {option_seasonal_promo}:', ['Seasonal', 'Unseasonal'], horizontal=True)
     
@@ -74,7 +76,7 @@ with col2:
     # PROBLEM
     if option_seasonal_promo:
         dataset_seasonable(data, option_seasonal_promo, option_s, selected_option)
-        
+    st.divider()
         
     
     # ----------------------

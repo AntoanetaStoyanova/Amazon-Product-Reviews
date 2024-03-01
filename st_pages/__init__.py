@@ -44,33 +44,39 @@ def dataset(data, category):
 
 
 #----------
+# Product Category Selector with Seasonal Flag: Analyzing Promo vs Non-Promo Sales Volume by Product Position
 def calculate_sales(data):
     promo_sales = data[data['Promotion'] == 'Yes']['Sales Volume'].sum()
     non_promo_sales = data[data['Promotion'] == 'No']['Sales Volume'].sum()
     return promo_sales, non_promo_sales
 
 def display_sales_data(data, category, seasonal, selected_option):
-        if data is not None:
+    if data is not None: # checks if the data parameter is not None
         
-            st.write(f'{seasonal} Product Category: {category}')
-            df = pd.DataFrame({
-                'Product Category': [category],
-                'Sales Values': [data if data else 0],
-                'Seasonal': [seasonal]
-            })
-            st.write(df)
+        st.write(f'{seasonal} Product Category: {category}')
+        df = pd.DataFrame({
+            'Product Category': [category],
+            'Sales Values': [data if data else 0], # if data is not None, the value will be set to the value of data
+            'Seasonal': [seasonal]
+        })
+        st.write(df)
         
-
-
 def process_seasonal_data(data, category, selected_option):
+    # group the data by Seasonal col and calculate the sum of Sales Volume for each Seasonal category 
     seasonal_sales = data.groupby('Seasonal')['Sales Volume'].sum()
+    # call the display_sales_data function 
+    # passe the sum of Sales volume for seasonal products along with Product Category and Selected option [Seasonal, Unseasonal]
     display_sales_data(seasonal_sales.get('Yes'), category, 'seasonal', selected_option)
     display_sales_data(seasonal_sales.get('No'), category, 'unseasonal', selected_option)
 
+    # extract unique position from ['Product Position']
     unique_positions = data['Product Position'].unique()
+    # create a list of strings representing the position categories 
     position_strings = [str(position) for position in unique_positions]
+    # generate tabs 
     tabs = st.tabs(position_strings)
     
+    # for each position, filter the data for the position and calculates promotional and non-promo sales using the func calculate_sales()
     for i, position in enumerate(unique_positions):
         position_data = data[data['Product Position'] == position]
         promo_sales, non_promo_sales = calculate_sales(position_data)
