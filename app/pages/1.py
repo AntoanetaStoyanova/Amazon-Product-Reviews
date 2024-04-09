@@ -5,7 +5,8 @@ import plotly.express as px
 from streamlit import altair_chart
 
 
-from st_pages import visualize_data, dataset, dataset_seasonable, count_position_sales
+
+from st_pages import visualize_data, dataset_seasonable, count_position_sales, analyze_sales
 
 
 
@@ -53,7 +54,7 @@ with col2:
                 'Food': ['Aisle', 'End-cap', 'Front of Store']}
 
     if option:
-        selected_data = dataset(data, option)
+        selected_data = analyze_sales(data, option, 'Product Position')
         # create tabs and pass the list of tab labels corresponding to the selected option
         tabs = st.tabs(tab_labels[option])
         # loop that iterates over each tab label in the list of tab labels associated with the selected option.
@@ -84,17 +85,24 @@ with col2:
     st.markdown("<br>", unsafe_allow_html=True)
     # ----------------------
 
-    # Creating tabs
-    #tab7, tab8, tab9 = st.tabs(['Aisle', 'End-cap', 'Front of Store'])
-    # Processing each tab
-    #with tab7:
-    #    count_promotion_sales(data, 'Aisle')
-    #with tab8:
-    #    count_promotion_sales(data, 'End-cap')
-    #with tab9:
-    #    count_promotion_sales(data, 'Front of Store')
+    option_ft = st.selectbox('Choose a Product Category:', ('Clothing', 'Electronics', 'Food'), key="ft")
+    if option_ft:
+        analyze_sales(data, option_ft, 'Foot Traffic')
 
+    st.divider()
     #-----------------
+        
+        # ----------------------
+    # Add blank space 
+    st.markdown("<br>", unsafe_allow_html=True)
+    # ----------------------
+
+    option_cd = st.selectbox('Choose a Product Category:', ('Clothing', 'Electronics', 'Food'), key="cd")
+    if option_cd:
+        analyze_sales(data, option_cd, 'Consumer Demographics')
+    #-----------------
+        
+
     filtered_data_clothing = data[data['Product Category'] == 'Clothing']
 
     # Filter the data for seasonal promotional clothing

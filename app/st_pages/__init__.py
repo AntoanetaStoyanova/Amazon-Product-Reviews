@@ -117,3 +117,32 @@ def count_position_sales(data, category, position):
 
 
 
+
+
+#------------------------------------------------------------
+def analyze_sales(data, category, group_by):
+    filtered_data_clothing = data[data['Product Category'] == category]
+    
+    if group_by == 'Product Position':
+        st.write(f'% of Sales Volume of {category} Item by Product Position:')
+    elif group_by == 'Foot Traffic':
+        st.write(f'% of Sales Volume of {category} Item by Foot Traffic:')
+    elif group_by == 'Consumer Demographics':
+        st.write(f'% of Sales Volume of {category} Item by Consumer Demographics:')
+    else:
+        st.write("Invalid group by criterion!")
+        return
+    
+    # Group by the specified criterion and calculate total sales value
+    sales_by_group = filtered_data_clothing.groupby(group_by)['Sales Volume'].sum()
+    total_sales = sales_by_group.sum()
+    sales_percentage = round((sales_by_group / total_sales) * 100, 2)
+
+    # Create a dictionary from sales_percentage
+    data_dict = {group_by: sales_percentage.index, '% Sales Volume': sales_percentage.values}
+
+    # Create a DataFrame
+    df = pd.DataFrame(data_dict)
+
+    # Display the DataFrame
+    st.write(df)
